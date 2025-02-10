@@ -35,7 +35,7 @@ export default function Home() {
     <div className="container mx-auto p-4 max-w-4xl">
       <Card>
         <CardHeader>
-          <CardTitle>Create Similar Images</CardTitle>
+          <CardTitle>Create Similar Image</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
