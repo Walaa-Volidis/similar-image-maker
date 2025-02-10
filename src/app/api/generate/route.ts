@@ -5,7 +5,7 @@ import { generateImage } from '../../../lib/generateImage';
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
-    const file = formData.get('image') as Blob;
+    const file = formData.get('image') as File;
     const buffer = Buffer.from(await file.arrayBuffer());
     const imageUrl = await uploadToS3(buffer);
     const imageBuffer = await generateImage(imageUrl);
