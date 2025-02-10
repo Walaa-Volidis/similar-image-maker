@@ -4,7 +4,7 @@ interface UseImageUploadReturn {
   selectedImage: File | null;
   previewUrl: string;
   error: string;
-  handleImageSelect: (file: File) => void;
+  handleImageSelect: (event: React.ChangeEvent<HTMLInputElement>) => void;
   resetImage: () => void;
 }
 
@@ -13,20 +13,23 @@ export function useImageUpload(): UseImageUploadReturn {
   const [previewUrl, setPreviewUrl] = useState<string>('');
   const [error, setError] = useState<string>('');
 
-  const handleImageSelect = (file: File) => {
-    if (file.size > 5 * 1024 * 1024) {
-      setError('File size must be less than 5MB');
-      return;
+  const handleImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        setError('File size must be less than 5MB');
+        return;
+      }
+
+      setSelectedImage(file);
+      setError('');
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewUrl(reader.result as string);
+      };
+      reader.readAsDataURL(file);
     }
-
-    setSelectedImage(file);
-    setError('');
-
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setPreviewUrl(reader.result as string);
-    };
-    reader.readAsDataURL(file);
   };
 
   const resetImage = () => {

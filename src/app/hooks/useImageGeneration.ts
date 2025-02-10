@@ -21,11 +21,8 @@ export function useImageGeneration(): UseImageGenerationReturn {
     setProgress(0);
 
     try {
-      const base64Image = await new Promise<string>((resolve) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result as string);
-        reader.readAsDataURL(file);
-      });
+      const formData = new FormData();
+      formData.append('image', file);
 
       const progressInterval = setInterval(() => {
         setProgress((prev) => Math.min(prev + 10, 90));
@@ -33,10 +30,7 @@ export function useImageGeneration(): UseImageGenerationReturn {
 
       const response = await fetch('/api/generate', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ image: base64Image }),
+        body: formData,
       });
 
       clearInterval(progressInterval);
