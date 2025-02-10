@@ -4,8 +4,9 @@ import { generateImage } from '../../../lib/generateImage';
 
 export async function POST(request: NextRequest) {
   try {
-    const { image: base64Image } = await request.json();
-    const buffer = Buffer.from(base64Image.split(',')[1], 'base64');
+    const formData = await request.formData();
+    const file = formData.get('image') as Blob;
+    const buffer = Buffer.from(await file.arrayBuffer());
     const imageUrl = await uploadToS3(buffer);
     const imageBuffer = await generateImage(imageUrl);
     const image = await uploadToS3(imageBuffer);
